@@ -1,49 +1,24 @@
-import streamlit as st
-import yfinance as yf
-import matplotlib.pyplot as plt
+import numpy as np
 
-from strategy.signals import generate_signals
-from backtest.engine import run_backtest
-from metrics.performance import calculate_metrics
+def calculate_metrics(df):
 
-st.set_page_config(page_title="AI Trading Strategy", layout="wide")
+    strategy_returns = df["strategy_return"].dropna()
 
-st.title("AI-Assisted Intraday Trading Strategy Dashboard")
+    total_return = df["cum_return"].iloc[-1] - 1
 
-ticker = "QQQ"
+    if strategy_returns.std() == 0 or len(strategy_returns) == 0:
+        sharpe = 0.0
+    else:
+        sharpe = np.sqrt(252) * strategy_returns.mean() / strategy_returns.std()
 
-data = yf.download(ticker, period="7d", interval="5m")
+    drawdown = df["cum_return"] / df["cum_return"].cummax() - 1
+    max_drawdown = drawdown.min()
 
-data = generate_signals(data)
-data = run_backtest(data)
-metrics = calculate_metrics(data)
+    trades = (df["signal"].diff().fillna(0) != 0).sum()
 
-st.subheader("Price Chart with Signals")
-
-fig, ax = plt.subplots(figsize=(12,6))
-ax.plot(data.index, data["Close"], label="Close Price")
-ax.plot(data.index, data["ma20"], label="MA20")
-
-buy = data[data["signal"] == 1]
-sell = data[data["signal"] == -1]
-
-ax.scatter(buy.index, buy["Close"], marker="^", label="Buy")
-ax.scatter(sell.index, sell["Close"], marker="v", label="Sell")
-
-ax.legend()
-ax.grid(True)
-
-st.pyplot(fig)
-
-st.subheader("Cumulative Return")
-
-fig2, ax2 = plt.subplots()
-ax2.plot(data.index, data["cum_return"])
-ax2.grid(True)
-
-st.pyplot(fig2)
-
-st.subheader("Performance Metrics")
-
-for k,v in metrics.items():
-    st.write(k, ":", v)
+    return {
+        "Total Return": total_return,
+        "Sharpe Ratio": sharpe,
+        "Max Drawdown": max_drawdown,
+        "Number of Trades": trades
+    }
