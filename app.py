@@ -2,9 +2,9 @@ import streamlit as st
 import yfinance as yf
 import matplotlib.pyplot as plt
 
-from strategy.signals import generate_signals
-from backtest.engine import run_backtest
-from metrics.performance import calculate_metrics
+from signals import generate_signals
+from engine import run_backtest
+from performance import calculate_metrics
 
 st.set_page_config(page_title="AI Trading Strategy", layout="wide")
 
