@@ -1,7 +1,5 @@
 # AI-Assisted Intraday Trading Strategy
 
-# AI-Assisted Intraday Trading Strategy
-
 This project demonstrates how AI-assisted tools can be used to design and evaluate algorithmic trading strategies using financial market data.
 
 The system downloads market data from Yahoo Finance, generates trading signals using technical indicators, and evaluates strategy performance through backtesting.
