@@ -1,23 +1,29 @@
-import numpy as np
+# AI-Assisted Intraday Trading Strategy
 
-def calculate_metrics(df):
-    strategy_returns = df["strategy_return"].dropna()
+## Project Overview
 
-    total_return = df["cum_return"].iloc[-1] - 1
+Financial markets generate large amounts of data every day, including stock prices, trading volumes, and market indicators. Analyzing this information manually can be difficult and time-consuming.
 
-    if strategy_returns.std() == 0 or len(strategy_returns) == 0:
-        sharpe = 0.0
-    else:
-        sharpe = np.sqrt(252) * strategy_returns.mean() / strategy_returns.std()
+This project implements an **AI-assisted intraday trading strategy** that analyzes short-term price movements and generates trading signals automatically. The strategy is evaluated using historical market data and a backtesting framework.
 
-    drawdown = df["cum_return"] / df["cum_return"].cummax() - 1
-    max_drawdown = drawdown.min()
+This project also demonstrates how AI-assisted development and agent-based systems can support the development of algorithmic trading tools.
 
-    trades = (df["signal"].diff().fillna(0) != 0).sum()
+---
 
-    return {
-        "Total Return": total_return,
-        "Sharpe Ratio": sharpe,
-        "Max Drawdown": max_drawdown,
-        "Number of Trades": trades
-    }
+## Project Objectives
+
+The objectives of this project are:
+
+* Design an intraday trading strategy using market data
+* Implement the strategy using Python
+* Perform backtesting on historical intraday data
+* Evaluate strategy performance using financial metrics
+* Demonstrate how AI-assisted tools can support algorithmic trading development
+
+---
+
+## Data Source
+
+Market data is collected from **Yahoo Finance** using the Python library:
+
+yfin
